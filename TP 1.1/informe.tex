@@ -1,0 +1,233 @@
+\documentclass{article}
+
+\usepackage{arxiv}
+\usepackage[spanish, mexico]{babel}
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{lipsum}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage{float}
+
+\title{Simulación de Ruleta}
+
+\author{
+  Rios Emiliano\\
+  Universidad Tecnológica Nacional\\
+  Rosario, Santa Fe  \\
+  \texttt{emilianorios99@gmail.com} \\
+  \And
+  Chiodo Matías\\
+  Universidad Tecnológica Nacional\\
+  Rosario, Santa Fe  \\
+  \texttt{matiaschiodo@gmail.com} \\
+  \And
+  Camilo Pereyra\\
+  Universidad Tecnológica Nacional\\
+  Rosario, Santa Fe\\
+  \texttt{caamilopereyra01@gmail.com} \\
+  \And
+  Guerrero Andrés\\
+  Univesidad Tecnológica Nacional\\
+  Rosario, Santa Fe \\
+  \texttt {andresguerreroutn@gmail.com} \\
+  \And
+  Giovanelli Julian\\
+  Universidad Tecnológica Nacional\\
+  Rosario, Santa Fe  \\
+  \texttt{julian\_giovanelli@hotmail.com} \\
+}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+El siguiente documento tiene por objetivo detallar el trabajo de investigación que debe realizarse
+como introducción a la materia simulación. El mismo consiste en desarrollar un modelo simple de
+ruleta cuyo funcionamiento será verificado mediante distintos tests rudimentarios.
+\end{abstract}
+
+\paragraph{\textit{Keywords}} Simulación · Trabajo práctico · Ruleta
+
+\section{Introducción}
+Aleatoriedad refiere a la cualidad de un suceso de no poder ser previsto y evitado. Los juegos de azar son excelentes ejemplos para simular eventos de naturaleza meramente aleatoria. Simulando los mismos es posible comprobar si una simulación concreta dada se acerca al carácter mostrado por el juego real, es decir, si podemos considerar la tendencia a la aleatoriedad de los distintos lanzamientos simulados.
+
+Una ruleta francesa posee 37 casillas, con números posibles a salir del 0 al 36, de igual probabilidad. Debido a esto, los valores que puede asumir una jugada de lanzamiento tienen una probabilidad de ocurrencia de: \begin{equation} \frac{x_i}{n} \end{equation} En el caso de la ruleta, cada número de esta tiene una probabilidad de ocurrencia aproximada de 0,027.
+
+\section{Objetivos}
+El objetivo de éste trabajo es evaluar la calidad de la aleatoriedad de las funciones de generación de números aleatorios en el lenguaje de programación Python. 
+
+Teniendo la frecuencia relativa, valor promedio, desvío y varianza esperados y calculando los mismos parámetros en cada corrida de la ruleta para luego compararlas visualmente en gráficas y concluir si el generador estudiado tiende a la aleatoriedad.
+
+\section{Metodología de trabajo}
+Con motivo de facilitar el estudio de las diferentes variables propuestas a analizar, se propuso el ingreso de los siguientes parámetros:
+\begin{itemize}
+\item Cantidad de corridas (C): cantidad de veces que se ejecutará el programa.
+\item Cantidad de tiradas (T): cantidad de veces que se tirará la ruleta.
+\item Número elegido (E): Número entero entre 0 y 36.
+\end{itemize}
+Una vez ingresados los parámetros mencionados, el programa se ejecutará tantas veces como número de corridas (X) se haya ingresado y durante cada corrida se hara girar la ruleta tantas veces como número de tiradas (Y) se haya especificado. 
+Cada tirada representara un número aleatorio el cual es generado utilizando a la función:
+\begin{verbatim}random.randint(0, 36)\end{verbatim}
+
+Sobre los resultados obtenidos en cada tirada, calculamos la frecuencia relativa del número elegido, el desvío, el valor promedio y la varianza del conjunto total de resultados. Para realizar estos calculos estadisticos, utilizamos la librería de python llamada numpy.
+
+Una vez procesados los datos, se grafican los resultados obtenidos para así visualizar el comportamiento de un caso en particular. Para graficar los resultados, utilizamos la librería de python llamada matplotlib.
+
+\section{Fórmulas empleadas:}
+
+\paragraph{Frecuencia relativa:}Se realizó utilizando la siguiente fórmula escrita en código Python, para calcular las ocurrencias del número elegido (frecuencia absoluta) con respecto a la cantidad de tiradas: \begin{equation} \frac{{x}_i}{n} \end{equation}
+Siendo:\begin{itemize}
+\item $x_{i}$: frecuencia absoluta de la observacion i-esima.
+
+\item $n$: número total de observaciones.
+\end{itemize}
+
+\paragraph {Media:}Para obtener la media utilizamos la función numpy.mean , que expresa la siguiente notación matemática :  \begin{equation}\bar{x}=\frac{\sum_{i=1}^{n} x_i}{n} \end{equation}
+
+Siendo:\begin{itemize}
+\item $x_{i}$: valor de la observación i.
+
+\item $n$: número total de observaciones.
+\end{itemize}
+
+\paragraph {Varianza (s^{2}):}Para obetener la varianza se ejecutó la función numpy.var que escrita en notación matemática es como sigue: \begin{equation} \frac{\sum_{i=1}^{n}(x_i - \bar{x})^{2}}{n - 1}  \end{equation}
+
+Siendo:\begin{itemize}
+\item $x_{i}$: valor de la observación i.
+
+\item $n$: número total de observaciones.
+
+\item $\bar{x}$ : media de X.
+\end{itemize}
+\paragraph {Desviación standard (s):}Para obtenerlo se usó el método numpy.std, que expresa la siguiente notación matemática:
+.
+\begin{equation} \sqrt{\frac{\sum_{i=1}^{n}(x_i - \bar{x})^{2})}{n - 1}} \end{equation}
+
+Siendo:\begin{itemize}
+
+\item $x_{i}$: valor de la observación i.
+
+\item $n$: número total de observaciones.
+
+\item $\bar{x}$ : media de X.
+\end{itemize}
+
+\section{Conceptos teóricos empleados.}
+
+\paragraph {Media:} es el valor promedio de un conjunto de datos numéricos, se calcula sumando todos los números en el conjunto de datos y luego al dividir entre el número de valores en el conjunto.En distribuciones discretas con la misma probabilidad en cada suceso, la media aritmética es igual que la esperanza matemática.
+
+\paragraph {Frecuencia Relativa:} es el número de veces que un número se repite en un conjunto de datos en relación con el total. Se puede expresar en porcentajes, fracciones o valores decimales.
+
+\paragraph  {Desviación standard (s):} es una medida que ofrece información sobre la dispersión media de una variable. Se obtiene calculando la raíz cuadrada de la varianza.
+
+\paragraph {Varianza:} medida de dispersión que representa la variabilidad de una serie de datos respecto a su media. Formalmente se calcula como la suma de los residuos al cuadrado divididos entre el total de observaciones. También se puede calcular como la desviación típica al cuadrado.
+
+\section{Herramientas utilizadas:}
+\paragraph{Legnuaje de programacion:}Se utilizó el lenguaje de programación Python en su versión 3 para el desarrollo de la simulación. Se utilizaron además módulos de la biblioteca estándar de Python, asi como bibliotecas externas para añadir más funcionalidad.
+
+\paragraph{Bibliotecas y Modulos:}
+\begin{itemize}
+    \item random: utilizamos el método \textit{randint} que genera un número entero pseudo-aleatorio que se encuentra entre el número mínimo y máximo pasados como parámetros. En nuestro caso el 0 y el 36.
+    \item numpy: Para calcular media, desvío y varianza utilizamos los métodos \textit{mean}, \textit{std}, \textit{var}.
+    \item matplotlib: Para graficar los resultados obtenidos, utilizamos los métodos \textit{plot}, \textit{title}, \textit{show}.
+\end{itemize}
+
+\paragraph{Parámetros utilizados:}Para realizar el experimento se utilizaron los siguientes parámetros y valores:\begin{itemize}
+    \item Cantidad de corridas: 10
+    \item Cantidad de tiradas: 2000
+    \item Número elegido: 7
+\end{itemize}
+
+\section{ Resultados.}
+A continuación se expondrán las gráficas obtenidas de los experimentos realizados, correspondiendo la columna izquierda a los valores obtenidos en una unica corrida y la columna derecha a los obtenidos en 5 corridas.
+
+    \begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.45\linewidth}
+    \includegraphics[scale=0.45]{Frecuencia.png}
+    \caption{Frecuencia Relativa del número 7 de n tiradas en 1 corridas}
+    \label{fig:grafico}
+    \end{subfigure}
+    \begin{subfigure}{0.45\linewidth}
+    \centering
+    \includegraphics[scale=0.45]{Frecuencia Grafica.png}
+    \caption{Frecuencia Relativa del número 7 de n tiradas en 10 corridas}
+    \label{fig:grafico}
+    \end{subfigure}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \begin{subfigure}{0.45\linewidth}
+            \includegraphics[scale=0.45]{Promedio.png}
+            \caption{Valor Promedio de las n tiradas}
+            \label{fig:grafico}
+        \end{subfigure}
+        \begin{subfigure}{0.45\linewidth}
+            \includegraphics[scale=0.45]{Promedio Grafica.png}
+            \caption{Valor Promedio de las n tiradas en 10 corridas}
+            \label{fig:grafico}
+        \end{subfigure}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \begin{subfigure}{0.45\linewidth}
+            \includegraphics[scale=0.45]{Desviación Estándar.png}
+            \caption{Valor del desvío de n tiradas}
+            \label{fig:grafico}
+        \end{subfigure}
+        \begin{subfigure}{0.45\linewidth}
+            \includegraphics[scale=0.45]{Desviación Estándar Grafica.png}
+            \caption{Valor del desvio de n tiradas en 10 corridas}
+            \label{fig:grafico}
+        \end{subfigure}
+    \end{figure}
+    
+    \begin{figure} [H]
+        \centering
+        \begin{subfigure}[h]{0.45\linewidth}
+            \includegraphics[scale=0.5]{Varianza.png}
+            \caption{Valor de la varianza de n tiradas}
+            \label{fig:grafico}
+        \end{subfigure}
+        \begin{subfigure}[h]{0.45\linewidth}
+            \includegraphics[scale=0.5]{Varianza Grafica.png}
+            \caption{Valor de la varianza de n tiradas en 10 corridas}
+            \label{fig:grafico}
+        \end{subfigure}
+    \end{figure}
+
+Como se podrá observar en las graficas de una sola corrida (figuras a), a medida de que la cantidad de tiradas aumenta, el valor calculado comienza cada vez a acercarse a su valor esperado. Cuando realizamos  multiples corridas (grafica b), se puede visualizar como, en las primeras tiradas, los valores calculados de cada corrida presentan una gran diferencia pero luego, al ir incrementando la cantidad de  tiradas realizadas, comienzan a acercarse al valor esperado.
+    
+\section{Conclusión.}
+En base al análisis de los resultados obtenidos en el estudio de la ruleta, hemos logrado comprender de una forma un más detallada el comportamiento aleatorio de la misma, centrándonos en el problema y planteando puntos de referencia. 
+
+Luego de haber realizado una cantidad significativa de repeticiones del programa, pudimos observar que, durante las primeras tiradas, la grafica se encuentra muy alejada de su valor esperado. Sin embargo, a medida de que la cantidad de tiradas va incrementando, tal valor comienza a aproximarse al esperado. Por lo que deducimos que a un mayor número de muestras, la precision aumenta.
+
+Finalmente, se concluye que: la probabilidad de ocurrencia de cada número es la misma y será siempre así para todos los números de la ruleta. La probabilidad de acertar el número elegido es 1/36 o 2.77 porciento, pero es algo incierto e impredecible.
+
+\bibliographystyle{unsrt}
+\begin{thebibliography}{1}
+
+\bibitem{kour2014real}
+https://www.888casino.es/blog/el-entretenimiento/historia-de-la-ruleta
+
+\bibitem{kour2014fast}
+https://docs.scipy.org/doc/scipy/reference/stats.html
+
+\bibitem{hadash2018estimate}
+https://python-para-impacientes.blogspot.com/2014/08/graficos-en-ipython.html
+
+\bibitem{kour2014real}
+https://relopezbriega.github.io/blog/2015/06/27/probabilidad-y-estadistica-con-python/
+
+\end{thebibliography}
+
+\end{document}

@@ -3,9 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 
-
 def graficar_frecuencias():
-    # Frecuencia
     for i in range(cant_corridas):
         plt.plot(eje_x, frecuencias[i])
     plt.xlabel("Numero de tiradas")
@@ -14,7 +12,6 @@ def graficar_frecuencias():
     plt.axhline(y=0.027, color="black") #valor esperado por 1/37
     #plt.ylim([0.0, 1])
     plt.show()
-
 
 def graficar_promedios():
     for i in range(cant_corridas):
@@ -25,7 +22,6 @@ def graficar_promedios():
     plt.axhline(y=18, color="black") # promedio esperado
     plt.show()
 
-
 def graficar_desviaciones_estandar():
     for i in range(cant_corridas):
         plt.plot(eje_x, desviaciones_estandar[i])
@@ -34,7 +30,6 @@ def graficar_desviaciones_estandar():
     plt.title("Evaluacion del desvío sobre el conjunto de valores aleatorios")
     plt.axhline(y=np.sqrt(114), color="black")
     plt.show()
-
 
 def graficar_varianzas():
     for i in range(cant_corridas):
@@ -46,7 +41,6 @@ def graficar_varianzas():
     plt.axhline(y=114, color="black")
     plt.show()
 
-
 # Verificar si se proporciona el número de valores como argumento
 if len(sys.argv) != 7 or sys.argv[1] != "-t" or sys.argv[3] != "-c" or sys.argv[5] != "-e":
     print("Uso: python tp1.1.py -t <tiradas> -c <corridas> -e <numero elegido>).")
@@ -55,6 +49,10 @@ if len(sys.argv) != 7 or sys.argv[1] != "-t" or sys.argv[3] != "-c" or sys.argv[
 cant_tiradas = int(sys.argv[2])
 cant_corridas = int(sys.argv[4])
 numero_elegido = int(sys.argv[6])
+
+if numero_elegido < 0 or numero_elegido > 36:
+    print("El número elegido debe ser un número entre 0 y 36.")
+    sys.exit(1)
 
 corridas = []
 promedios = []
@@ -80,5 +78,3 @@ graficar_frecuencias()
 graficar_promedios()
 graficar_desviaciones_estandar()
 graficar_varianzas()
-
-
