@@ -3,49 +3,64 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 
+def girarRuleta(evento,apuesta,capital):
+        gano = True
+        rojo = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
+        negro = [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35]
+        impar = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35]
+        par = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36]
 
-def graficar_frecuencias():
-    # Frecuencia
-    for i in range(cant_corridas):
-        plt.plot(eje_x, frecuencias[i])
-    plt.xlabel("Numero de tiradas")
-    plt.ylabel("Frecuencia")
-    plt.title("Evaluacion de la frecuencia relativa del número elegido sobre el conjunto")
-    plt.axhline(y=0.027, color="black") #valor esperado por 1/37
-    #plt.ylim([0.0, 1])
-    plt.show()
+        tirada = random.randint(0,36)
+        
+        if tirada in range(1,13) and evento=="Primeros 12":
+            capital += apuesta*2
+        elif tirada in range(13,25) and evento=="Segundos 12":
+            capital += apuesta*2
+        elif tirada in range(25,36) and evento=="Terceros 12":
+            capital += apuesta*2
+        elif tirada in range(3,39,3) and evento=="Tercera Columna":
+            capital += apuesta*2
+        elif tirada in range(2,38,3) and evento=="Segunda Columna":
+            capital += apuesta*2
+        elif tirada in range(1,37,3) and evento=="Primera Columna":
+            capital += apuesta*2
+        elif tirada in range(1,10) and evento=="1 a 18":
+            capital += apuesta
+        elif tirada in range(19,37) and evento=="19 a 36":
+            capital += apuesta
+        elif tirada in impar and evento=="Impares":
+            capital += apuesta
+        elif tirada in par and evento=="Pares":
+            capital += apuesta
+        elif tirada in negro and evento=="Negro":
+            capital += apuesta
+        elif tirada in rojo and evento=="Rojo":
+            capital += apuesta
+        elif tirada == evento:
+            capital += apuesta*35
+        else:
+            capital -= apuesta
+            gano = False
+        return tirada, capital, gano
 
+def martingala(apuesta_inicial, capital_maximo, cantidad_de_apuestas):
+    capital = capital_maximo
+    apuesta = apuesta_inicial
+    apuesta_numero = 0
 
-def graficar_promedios():
-    for i in range(cant_corridas):
-        plt.plot(eje_x, promedios[i])
-    plt.xlabel("Numero de tiradas")
-    plt.ylabel("Promedio")
-    plt.title("Evaluacion del promedio sobre el conjunto de valores aleatorios")
-    plt.axhline(y=18, color="black") # promedio esperado
-    plt.show()
+    while capital > apuesta and apuesta_numero < cantidad_de_apuestas:
+        apuesta_numero += 1
 
+        tirada, capital, gano = girarRuleta("Rojo", apuesta, capital)
 
-def graficar_desviaciones_estandar():
-    for i in range(cant_corridas):
-        plt.plot(eje_x, desviaciones_estandar[i])
-    plt.xlabel("Numero de tiradas")
-    plt.ylabel("Desviaciones Estandar")
-    plt.title("Evaluacion del desvío sobre el conjunto de valores aleatorios")
-    plt.axhline(y=np.sqrt(114), color="black")
-    plt.show()
+        if gano:
+            print(f"Gano, capital actual: {capital} - Apuesta Nro: {apuesta_numero} - Aposto {apuesta}")
+            apuesta = apuesta_inicial
+        else:
+            apuesta *= 2
+            print(f"Perdio, capital actual: {capital} - Apuesta Nro: {apuesta_numero} - Aposto {apuesta}")
 
-
-def graficar_varianzas():
-    for i in range(cant_corridas):
-        plt.plot(eje_x, varianzas[i])
-    plt.xlabel("Numero de tiradas")
-    plt.ylabel("Varianzas")
-    plt.title("Evaluacion de la varianza sobre el conjunto de valores aleatorios")
-    # plt.ylim([70, 150]) # esta ponderada la medicion
-    plt.axhline(y=114, color="black")
-    plt.show()
-
+    return capital, apuesta_numero
 
 # Verificar si se proporciona el número de valores como argumento
 #if len(sys.argv) != 7 or sys.argv[1] != "-t" or sys.argv[3] != "-c" or sys.argv[5] != "-e":
@@ -55,59 +70,6 @@ def graficar_varianzas():
 cant_tiradas = 10 #int(sys.argv[2])
 cant_corridas = 1 #int(sys.argv[4])
 numero_elegido = 10 #int(sys.argv[6])
-
-capital = 100000000
-
-
-
-corridas = []
-promedios = []
-desviaciones_estandar = []
-frecuencias = []
-varianzas = []
-for i in range(cant_corridas):
-    corridas.append([])
-    promedios.append([])
-    desviaciones_estandar.append([])
-    frecuencias.append([])
-    varianzas.append([])
-    for m in range(cant_tiradas):
-        corridas[i].append(random.randint(0, 36))
-        promedios[i].append(np.average(corridas[i]))
-        desviaciones_estandar[i].append(np.std(corridas[i]))
-        frecuencias[i].append(corridas[i].count(numero_elegido) / len(corridas[i]))
-        varianzas[i].append(np.var(corridas[i]))
-
-eje_x = [m+1 for m in range(cant_tiradas)]
-
-
-#graficar_frecuencias()
-#graficar_promedios()
-#graficar_desviaciones_estandar()
-##graficar_varianzas()
-
-
-import random
-
-
-def martingala(apuesta_inicial, capital_maximo, numero_maximo):
-    capital = capital_maximo
-    apuesta = apuesta_inicial
-    numero = 0
-
-    while capital > 0 and numero < numero_maximo:
-        numero += 1
-        resultado = random.randint(0, 36)  # Simula el giro de la ruleta
-
-        if resultado % 2 == 0:  # Si el resultado es par, ganas
-            capital += apuesta
-            apuesta = apuesta_inicial  # Restablece la apuesta inicial
-        else:  # Si el resultado es impar, pierdes
-            capital -= apuesta
-            apuesta *= 2  # Duplica la apuesta
-
-    return capital, numero
-
 
 apuesta_inicial = 10
 capital_maximo = 1000
