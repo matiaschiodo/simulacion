@@ -3,6 +3,20 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 
+def graficar_frec(frecuencias):
+    plt.bar(range(len(frecuencias)),frecuencias,align='center', alpha=0.5)
+    plt.xlabel('Iteración')
+    plt.ylabel('Frecuencia de Ganar')
+    plt.title('Frecuencia de Ganar en Cada Iteración')
+    plt.show()
+
+def graficar_estrategia(capital,capital_inicial):
+    plt.plot(capital)
+    plt.xlabel('Numero de Apuesta')
+    plt.ylabel('Capital')
+    plt.title('Martingala Evolucion')
+    plt.axhline(y=capital_inicial, color="red", linestyle='--') # promedio esperado
+    plt.show()
 def girarRuleta(evento,apuesta,capital):
         gano = True
         rojo = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
@@ -71,11 +85,14 @@ def martingala_inversa(gano, apuesta, apuesta_inicial):
     return apuesta * 2 if gano else apuesta_inicial
 
 
-def apostar(apuesta_inicial, capital_maximo, cantidad_de_apuestas, estrategia):
-    capital = capital_maximo
+def apostar(apuesta_inicial, capital_inicial, cantidad_de_apuestas, estrategia):
+    capital = capital_inicial
     apuesta = apuesta_inicial
     apuesta_numero = 0
     indice_fib = 1
+    capital_histo = []
+    ganadas_histo =[]
+    frecuencias_histo = []
 
     while capital > apuesta and apuesta_numero < cantidad_de_apuestas:
         apuesta_numero += 1
@@ -89,9 +106,16 @@ def apostar(apuesta_inicial, capital_maximo, cantidad_de_apuestas, estrategia):
         if estrategia == "F": apuesta, indice_fib = fibonacci(gano, apuesta_inicial, indice_fib)
         if estrategia == "C": apuesta = constante(apuesta_inicial)
         if estrategia == "MI": apuesta = martingala_inversa(gano, apuesta, apuesta_inicial)
+        capital_histo.append(capital)
+        ganadas_histo.append(gano)
+        frecuencias_histo.append(ganadas_histo.count(True)/ len(ganadas_histo))
+        print(capital_histo)
+        print(ganadas_histo)
+        print(frecuencias_histo)
+    graficar_estrategia(capital_histo,capital_inicial)
+    graficar_frec(frecuencias_histo)
 
     return capital, apuesta_numero
-
 
 
 # Verificar si se proporciona el número de valores como argumento
@@ -104,11 +128,11 @@ cant_corridas = 1 #int(sys.argv[4])
 numero_elegido = 10 #int(sys.argv[6])
 
 apuesta_inicial = 10
-capital_maximo = 1000
+capital_inicial = 1000
 numero_maximo = 1000
-estrategia = "C"
+estrategia = "M"
 
-capital_final, numero_jugadas = apostar(apuesta_inicial, capital_maximo, numero_maximo, estrategia)
+capital_final, numero_jugadas = apostar(apuesta_inicial, capital_inicial, numero_maximo, estrategia)
 print(f"Capital final: {capital_final}")
 print(f"Número de jugadas: {numero_jugadas}")
 
