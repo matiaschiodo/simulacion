@@ -185,7 +185,7 @@ cant_corridas = int(sys.argv[4])
 estrategia = sys.argv[6].upper()
 capital_ilimitado = sys.argv[8].upper() == 'I'
 
-capital_inicial = 500
+capital_inicial = 1000
 apuesta_inicial = 10
 
 print(f"Corridas: {cant_corridas} - Tiradas: {cant_tiradas} - Estrategia: {estrategia} - Capital: {'Ilimitado' if capital_ilimitado else capital_inicial}")
