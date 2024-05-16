@@ -39,6 +39,7 @@ def grafica_porcentaje_ganancias(porcentaje_ganancias_acumulado):
     plt.ylabel('Porcentaje de Corridas con Ganancias (%)')
     plt.title('Porcentaje de Corridas con Ganancias Acumulado')
     plt.grid(True)
+    plt.ylim([0, 100])
     plt.show()
 
 
@@ -47,7 +48,6 @@ def apostar(cant_corridas, apuesta_inicial, capital_inicial, cantidad_de_apuesta
     capitales = []
     ganadas_bool = []
     frecuencias = []
-    esta_en_ganancia_bool = []
     for i in range(cant_corridas):
         capital = capital_inicial
         apuesta = apuesta_inicial
@@ -56,7 +56,6 @@ def apostar(cant_corridas, apuesta_inicial, capital_inicial, cantidad_de_apuesta
         capitales.append([])
         ganadas_bool.append([])
         frecuencias.append([])
-        esta_en_ganancia_bool.append([])
 
         while apuesta_numero < cantidad_de_apuestas:
             if (capital > apuesta or capital_ilimitado):
@@ -74,7 +73,6 @@ def apostar(cant_corridas, apuesta_inicial, capital_inicial, cantidad_de_apuesta
             else:
                 frecuencias[i].append(ultima_frecuencia)
 
-            esta_en_ganancia_bool[i].append(capital > capital_inicial)
             capitales[i].append(capital)
 
             if capital < apuesta and not capital_ilimitado: print(
@@ -88,7 +86,7 @@ def apostar(cant_corridas, apuesta_inicial, capital_inicial, cantidad_de_apuesta
     for i, corrida in enumerate(capitales, 1):
         if corrida[cantidad_de_apuestas - 1] > capital_inicial:
             corridas_con_ganancias += 1
-        porcentaje_ganancias_acumulado.append((corridas_con_ganancias / i))
+        porcentaje_ganancias_acumulado.append((corridas_con_ganancias / i) * 100)
 
     graficar_capital(capitales[0], capital_inicial)
     graficar_frecuencia(frecuencias[0])
@@ -176,7 +174,7 @@ def martingala_inversa(gano, apuesta, apuesta_inicial):
 
 
 # Verificar si se proporciona el número de valores como argumento
-if len(sys.argv) != 11 or sys.argv[1] != "-t" or sys.argv[3] != "-c" or sys.argv[5] != "-s" or sys.argv[7] != "-a":
+if len(sys.argv) != 9 or sys.argv[1] != "-t" or sys.argv[3] != "-c" or sys.argv[5] != "-s" or sys.argv[7] != "-a":
     print("Uso: python tp1.2.py -t <tiradas> -c <corridas> -s <estrategia> -a <tipo de capital>.")
     print("Estrategias: M (Martingala), D (D'Alembert), F (Fibonacci), MI (Martingala Inversa), C (Constante)")
     print("Tipo de capital: I (Infinito), L (Limitado)")
@@ -184,12 +182,17 @@ if len(sys.argv) != 11 or sys.argv[1] != "-t" or sys.argv[3] != "-c" or sys.argv
 
 cant_tiradas = int(sys.argv[2])
 cant_corridas = int(sys.argv[4])
-estrategia = sys.argv[8].upper()
-capital_ilimitado = sys.argv[10].upper() == 'I'
+estrategia = sys.argv[6].upper()
+capital_ilimitado = sys.argv[8].upper() == 'I'
 
 capital_inicial = 500
 apuesta_inicial = 10
 
 print(f"Corridas: {cant_corridas} - Tiradas: {cant_tiradas} - Estrategia: {estrategia} - Capital: {'Ilimitado' if capital_ilimitado else capital_inicial}")
 
-apostar(cant_corridas, apuesta_inicial, capital_inicial, cant_tiradas, estrategia, capital_ilimitado)
+apostar(cant_corridas=cant_corridas,
+        apuesta_inicial=apuesta_inicial,
+        capital_inicial=capital_inicial,
+        cantidad_de_apuestas=cant_tiradas,
+        estrategia=estrategia,
+        capital_ilimitado=capital_ilimitado)
