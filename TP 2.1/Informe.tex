@@ -1,0 +1,382 @@
+\documentclass{article}
+
+\usepackage{arxiv}
+\usepackage[spanish, mexico]{babel}
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{lipsum}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{adjustbox}
+\usepackage[table,xcdraw]{xcolor}
+\graphicspath{ {./images/} }
+\renewcommand{\figurename}{Figura}
+
+\title{TP 2.1 - GENERADORES PSEUDOALEATORIOS}
+
+\author{
+  Rios Emiliano\\
+  Universidad Tecnológica Nacional\\
+  Rosario, Santa Fe  \\
+  \texttt{emilianorios99@gmail.com} \\
+  \And
+  Chiodo Matías\\
+  Universidad Tecnológica Nacional\\
+  Rosario, Santa Fe  \\
+  \texttt{matiaschiodo@gmail.com} \\
+  \And
+  Pereyra Camilo\\
+  Universidad Tecnológica Nacional\\
+  Rosario, Santa Fe\\
+  \texttt{caamilopereyra01@gmail.com} \\
+  \And
+  Guerrero Andrés\\
+  Univesidad Tecnológica Nacional\\
+  Rosario, Santa Fe \\
+  \texttt {andresguerreroutn@gmail.com} \\
+  \And
+  Giovanelli Julian\\
+  Universidad Tecnológica Nacional\\
+  Rosario, Santa Fe  \\
+  \texttt{julian\_giovanelli@hotmail.com} \\
+}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+Este informe tiene como objetivo exponer y analizar los resultados obtenidos de varios generadores de números pseudoaleatorios. Profundizaremos en este concepto y realizaremos una comparación entre tres generadores distintos: dos métodos implementados en un programa propio y el generador disponible en la biblioteca de Python.
+\end{abstract}
+
+\section{Introducción}
+
+En el ámbito de la informática y las matemáticas, los generadores de números pseudoaleatorios juegan un papel fundamental en diversas aplicaciones, desde simulaciones y criptografía hasta algoritmos de optimización y juegos. Los generadores de números pseudoaleatorios son algoritmos que generan secuencias de números que, aunque no son verdaderamente aleatorios, imitan las propiedades de los números aleatorios.
+
+Este informe se centra en la evaluación y comparación de tres tipos específicos de generadores de números pseudoaleatorios. El primer tipo es el Generador Congruencial Lineal (GCL), uno de los métodos más antiguos y ampliamente utilizados debido a su simplicidad y eficiencia. El segundo método es el de la parte media del cuadrado, un enfoque más clásico que, aunque menos común en la actualidad, ofrece una perspectiva interesante sobre la generación de números pseudoaleatorios. Finalmente, se analizará el generador proporcionado por el módulo random de Python, que es ampliamente utilizado en la programación moderna debido a su robustez y facilidad de uso.
+
+A lo largo de este documento, se describirán en detalle estos generadores, se implementarán los dos primeros en un programa desarrollado específicamente para este estudio, y se compararán sus resultados con los del generador del módulo random de Python. Esta comparación permitirá evaluar la calidad y eficiencia de cada método, proporcionando una visión clara de sus ventajas y limitaciones en distintos contextos de aplicación.
+
+\section{Fundamentos Teóricos}
+Los números pseudoaleatorios son secuencias de números generadas por procedimientos deterministas, pero que imitan el comportamiento de los números aleatorios. Estos números son esenciales en diversas áreas como la criptografía, las simulaciones y los algoritmos probabilísticos, entre otros. La generación de números pseudoaleatorios se lleva a cabo mediante algoritmos específicos conocidos como generadores de números pseudoaleatorios.
+
+Para evaluar la calidad de estos números pseudoaleatorios, se les someterá a una serie de pruebas que determinarán su calidad y fiabilidad.
+
+
+\subsection{Generadores de números pseudoaleatorios}
+
+\subsubsection{Generador Congruencial Lineal (GCL)}
+
+El Generador Congruencial Lineal es uno de los métodos más antiguos y más utilizados para la generación de números pseudoaleatorios. Un GCL genera una secuencia de números mediante la siguiente relación recursiva:
+
+\begin{equation}
+ X_{n+1} = (aX_{n}+c) \mod m 
+\end{equation}
+
+donde:
+\begin{itemize}
+    \item $X$ es la secuencia de números pseudoaleatorios.
+    \item $a$ es el multiplicador.
+    \item $c$ es el incremento.
+    \item $m$ es el módulo.
+    \item $X_{0}$ es la semilla o valor inicial.
+    
+\end{itemize}
+El GCL es popular por su simplicidad y velocidad. Sin embargo, su calidad depende críticamente de la elección de los parámetros $a$, $c$, y $m$. Una mala elección de estos parámetros puede llevar a secuencias de baja calidad con periodos cortos y patrones evidentes.
+
+\subsubsection{Método de la Parte Media del Cuadrado}
+El Método de la Parte Media del Cuadrado, propuesto por John von Neumann, es uno de los métodos más antiguos para la generación de números pseudoaleatorios. Este método consiste en elevar al cuadrado el número actual y tomar una porción del resultado como el siguiente número de la secuencia. El algoritmo se define de la siguiente manera:
+\begin{enumerate}
+    \item Se toma un número inicial (semilla).
+    \item Se eleva al cuadrado.
+    \item Se extrae la parte media del resultado como el nuevo número de la secuencia.
+\end{enumerate}
+
+Por ejemplo, si la semilla es 1234, se eleva al cuadrado para obtener 1522756, y si tomamos los dígitos centrales (por ejemplo, los cuatro dígitos del medio, 5227), obtenemos el siguiente número de la secuencia.
+
+Aunque este método es fácil de implementar, su principal desventaja es la tendencia a generar secuencias con periodos cortos y ciclos repetitivos, lo que lo hace menos adecuado para aplicaciones que requieren una alta calidad de aleatoriedad.
+
+\subsubsection{Generadores del Módulo Random de Python}
+
+El módulo random de Python proporciona una serie de funciones para generar números pseudoaleatorios, basados en el algoritmo Mersenne Twister. Este algoritmo es uno de los generadores de números pseudoaleatorios más utilizados debido a su largo periodo $(2^{19937^{-1}})$ y su alta calidad estadística.
+
+\subsection{Tests utilizados}
+
+\subsubsection{Test de bondad de Chi-cuadrado}
+
+El Test de bondad de ajuste de Chi-cuadrado es una prueba estadística que se utiliza para comparar la distribución de una muestra de datos observados con una distribución teórica esperada. El objetivo es determinar si las diferencias entre las frecuencias observadas y las esperadas son lo suficientemente grandes como para concluir que los datos no siguen la distribución teórica.
+
+\subsubsection{Test de racha}
+
+El Test de Racha es una prueba estadística utilizada para evaluar la aleatoriedad de una secuencia de datos. Específicamente, analiza la presencia de patrones o tendencias dentro de la secuencia, verificando si los datos ocurren en una ordenación no aleatoria.
+
+
+\subsubsection{Test de corridas de arriba y de abajo de la media}
+
+El Test de Corridas por Encima y por Debajo de la Media es una prueba estadística utilizada para evaluar la aleatoriedad de una secuencia de datos. Este test se centra en la distribución de los valores por encima y por debajo de la media de la secuencia, analizando si los valores están distribuidos de manera aleatoria o si muestran algún patrón.
+
+\section{Metodología}
+
+Para implementar los diversos generadores, se desarrolló un programa utilizando el lenguaje Python 3.x. Este programa se encargará de efectuar los cálculos necesarios para generar números pseudoaleatorios. Además, permitirá la iteración del proceso, almacenará los resultados y, posteriormente, los graficará para facilitar el análisis y la obtención de conclusiones.
+
+
+\section{Caso de estudio 1: Generador GCL}
+
+Como se mencionó anteriormente, este método requiere definir primero los parámetros que se utilizarán en la fórmula. Para este estudio, hemos elegido utilizar RANDU, un generador de números aleatorios que fue ampliamente empleado en las décadas de 1960 y 1970. Sus parámetros son:
+
+\begin{itemize}
+    \item $a = 2^{16}$
+    \item $c = 3$
+    \item $m =2^{31}$
+    \item $x_{0} = 3$ 
+    \item $seed = 6666$
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.3]{glc1.png}
+    \caption{Resultados obtenidos en 10.000 tiradas}
+    \label{fig:glc-10000}
+\end{figure}
+
+Como podemos observar en primera instancia no obtenemos algún tipo de distribución en la aparición de los resultados generados.
+
+Al utilizar el mismo generador y aumentar el número de tiradas a 50,000, la interpretación visual de los resultados se vuelve complicada. Por lo tanto, nos basamos en los espacios en blanco (ausencia de ocurrencia de números) para concluir que no observamos ningún tipo de patrón característico al utilizar este generador.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.3]{glc2.png}
+    \caption{Resultados obtenidos en 50.000 tiradas}
+    \label{fig:glc-50000}
+\end{figure}
+
+Al continuar aumentando el número de tiradas a 100,000, y utilizando un razonamiento similar al de la gráfica anterior, observamos que el generador sigue sin presentar ningún tipo de patrón, incluso con el incremento de tiradas.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.3]{glc3.png}
+    \caption{Resultados obtenidos en 100.000 tiradas}
+    \label{fig:glc-100000}
+\end{figure}
+
+Finalmente, como último ejercicio, aumentamos el número de tiradas a 500,000. Visualmente, notamos muy pocos lugares sin ocurrencia, y no se observa ningún patrón específico en estos.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.3]{glc4.png}
+    \caption{Resultados obtenidos en 500.000 tiradas}
+    \label{fig:glc-500000}
+\end{figure}
+
+Analizando las gráficas de forma visual, llegamos a la conclusión de que, a simple vista, el generador parece producir números aleatorios sin mostrar ningún tipo de patrón. Al aumentar el número de tiradas de gráfica en gráfica, nos damos cuenta de que las zonas destacadas en la gráfica de 10,000 tiradas pierden relevancia al llegar a 50,000 tiradas, donde los resultados son prácticamente aleatorios.
+
+\section{Caso de estudio 2: Método de la parte media del cuadrado}
+
+Al igual manera que el caso de estudio 1 comenzamos a utilizar este nuevo generador con 10.000 tiradas. En este caso no resaltaremos zonas que presenten alguna cadena ya que además de no notar algún significativamente grande, el caso de estudio anterior nos dio como enseñanza que no representan nada concreto.
+\begin{itemize}
+    \item $seed = 1234567890$
+\end{itemize}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.3]{cuad1.png}
+    \caption{Resultados obtenidos en 10.000 tiradas}
+    \label{fig:cuad-10000}
+\end{figure}
+
+Al aumentar a 50,000 tiradas, observamos que la distribución sigue siendo uniforme e impredecible. Hasta este punto, el generador está funcionando de manera óptima, cumpliendo su propósito de la forma esperada.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.3]{cuad2.png}
+    \caption{Resultados obtenidos en 50.000 tiradas}
+    \label{fig:cuad-50000}
+\end{figure}
+
+En la gráfica de las 100,000 tiradas, aproximadamente a partir de las 75,000, notamos que comienza a repetirse un patrón determinado. Esto ocurre porque, al utilizar un número muy grande de tiradas, este tipo de generador puede presentar ciertos problemas que llevan a uno de los siguientes dos escenarios:
+\begin{itemize}
+    \item Repetir el valor 0 en todas las tiradas subsiguientes.
+    \item Repetir el mismo patrón de generación cada cierto número de tiradas, en este caso, aproximadamente cada 2,500 tiradas.
+\end{itemize}
+Cabe aclarar que para obtener estos resultados utilizamos una semilla muy grande, con el objetivo de poder comparar eficazmente la gráfica con otros métodos. En lugar de utilizar una semilla de 4 dígitos, usamos una de 10 dígitos, ya que de lo contrario, aproximadamente al llegar a la tirada número 60, los resultados convergían en 0.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.3]{cuad3.png}
+    \caption{Resultados obtenidos en 100.000 tiradas}
+    \label{fig:cuad-100000}
+\end{figure}
+
+Observamos un comportamiento idéntico al aumentar el número total de tiradas a 500,000, obteniendo la misma repetición del patrón aproximadamente cada 2,500 tiradas. Con lo explicado anteriormente, podemos desarrollar nuestras conclusiones.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.3]{cuad4.png}
+    \caption{Resultados obtenidos en 500.000 tiradas}
+    \label{fig:cuad-500000}
+\end{figure}
+
+Como hemos observado en las gráficas de 100,000 y 500,000 tiradas, este generador se vuelve obsoleto a partir de aproximadamente 75,000 tiradas (dependiendo del tamaño de la semilla). Por lo tanto, podemos concluir que este tipo de generador es efectivo para tiradas pequeñas. De lo contrario, se debe utilizar una semilla lo suficientemente grande para obtener las tiradas deseadas. Sin una expresión matemática específica que determine el tamaño necesario de la semilla para obtener los resultados deseados, concluimos que el generador no es muy eficaz para tiradas mayores a 50,000.
+
+\section{Caso de estudio 3: Generador random de Python}
+ 
+Para el caso de estudio número 3, utilizaremos el generador de números aleatorios incorporado en el lenguaje Python.
+
+En el primer experimento con 10,000 tiradas, a simple vista no se observa ningún comportamiento característico; las apariciones se distribuyen uniformemente en toda la plantilla.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.3]{random1.png}
+    \caption{Resultados obtenidos en 10.000 tiradas}
+    \label{fig:random-10000}
+\end{figure}
+
+Igualmente al aumentar a 50.000 tiradas seguimos generando números que no presentan algún tipo de patrón. Nos damos cuenta en primera instancia que este generador esta funcionando correctamente.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.3]{random2.png}
+    \caption{Resultados obtenidos en 50.000 tiradas}
+    \label{fig:random-50000}
+\end{figure}
+
+Al utilizar 100,000 tiradas, seguimos observando un comportamiento similar al de las gráficas anteriores. Además, podemos notar que este generador no presenta los problemas del caso de estudio anterior.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.3]{random3.png}
+    \caption{Resultados obtenidos en 100.000 tiradas}
+    \label{fig:random-100000}
+\end{figure}
+
+Finalmente, al utilizar 500,000 tiradas, observamos que las apariciones cumplen con lo esperado. No se detecta ningún patrón específico y los resultados se distribuyen a lo largo de toda la gráfica.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.3]{random4.png}
+    \caption{Resultados obtenidos en 500.000 tiradas}
+    \label{fig:random-500000}
+\end{figure}
+
+En conclusión, podemos afirmar que el generador es eficaz, cumple su propósito y, a simple vista, no presenta fallas significativas.
+
+\section{Comparación entre generadores}
+
+Para evaluar los distintos tipos de generadores, utilizaremos los tests mencionados al inicio del informe. Para presentar los resultados obtenidos con nuestro programa, hemos confeccionado una tabla. En esta tabla se indicará: el tipo de generador, la cantidad de repeticiones y el valor obtenido comparado con el esperado por el test. Cabe adelantar que, como se muestra en las tablas, casi todos los métodos funcionan como se espera en la generación de números pseudoaleatorios.
+
+\subsection{Test Chi Cuadrado}
+
+\begin{table}[H]
+\begin{tabular}{|l|l|l|l|}
+\hline
+\rowcolor[HTML]{C0C0C0} 
+\multicolumn{1}{|c|}{\cellcolor[HTML]{C0C0C0}{\color[HTML]{000000} \textbf{Generador}}} & {\color[HTML]{000000} \textbf{Cantidad de Numeros}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}{\color[HTML]{000000} \textbf{Test de Chi Cuadrado}}} & {\color[HTML]{000000} \textbf{Pasó Test?}} \\ \hline
+\rowcolor[HTML]{FFFFFF} 
+GCL RandU                                                                               & 10000                                               & Valor Obtenido = 5.948  , Valor esperado por Tabla \textless 16.92                                & \cellcolor[HTML]{00FF00}Verdadero          \\ \hline
+\rowcolor[HTML]{EFEFEF} 
+GCL RandU                                                                               & 50000                                               & Valor Obtenido = 5.003  , Valor esperado por Tabla \textless 16.92                                & \cellcolor[HTML]{00FF00}Verdadero          \\ \hline
+\rowcolor[HTML]{FFFFFF} 
+GCL RandU                                                                               & 100000                                              & Valor Obtenido = 12.875  , Valor esperado por Tabla \textless 16.92                               & \cellcolor[HTML]{00FF00}Verdadero          \\ \hline
+\rowcolor[HTML]{EFEFEF} 
+GCL RandU                                                                               & 500000                                              & Valor Obtenido = 10.302  , Valor esperado por Tabla \textless 16.92                               & \cellcolor[HTML]{00FF00}Verdadero          \\ \hline
+\rowcolor[HTML]{FFFFFF} 
+Cuadrados Medios                                                                        & 10000                                               & Valor Obtenido = 11.594  , Valor esperado por Tabla \textless 16.92                               & \cellcolor[HTML]{00FF00}Verdadero          \\ \hline
+\rowcolor[HTML]{EFEFEF} 
+Cuadrados Medios                                                                        & 50000                                               & Valor Obtenido = 8.32  , Valor esperado por Tabla \textless 16.92                                 & \cellcolor[HTML]{00FF00}Verdadero          \\ \hline
+\rowcolor[HTML]{FFFFFF} 
+Cuadrados Medios                                                                        & 100000                                              & Valor Obtenido = 16.039  , Valor esperado por Tabla \textless 16.92                               & \cellcolor[HTML]{00FF00}Verdadero          \\ \hline
+\rowcolor[HTML]{EFEFEF} 
+Cuadrados Medios                                                                        & 500000                                              & Valor Obtenido = 608.86  , Valor esperado por Tabla \textless 16.92                               & \cellcolor[HTML]{FF0000}Falso              \\ \hline
+\rowcolor[HTML]{FFFFFF} 
+Random python                                                                           & 10000                                               & Valor Obtenido = 9.484  , Valor esperado por Tabla \textless 16.92                                & \cellcolor[HTML]{00FF00}Verdadero          \\ \hline
+\rowcolor[HTML]{EFEFEF} 
+Random python                                                                           & 50000                                               & Valor Obtenido = 5.93  , Valor esperado por Tabla \textless 16.92                                 & \cellcolor[HTML]{00FF00}Verdadero          \\ \hline
+\rowcolor[HTML]{FFFFFF} 
+Random python                                                                           & 100000                                              & Valor Obtenido = 9.744  , Valor esperado por Tabla \textless 16.92                                & \cellcolor[HTML]{00FF00}Verdadero          \\ \hline
+\rowcolor[HTML]{EFEFEF} 
+Random python                                                                           & 500000                                              & Valor Obtenido = 9.74  , Valor esperado por Tabla \textless 16.92                                 & \cellcolor[HTML]{00FF00}Verdadero          \\ \hline
+\end{tabular}
+\end{table}
+
+Comenzando con el test de Chi-cuadrado, observamos que los valores obtenidos son menores que los esperados por la tabla en todos los métodos, excepto en el de Cuadrados Medios. Como ya habíamos concluido desde un principio, este generador es el menos efectivo de los estudiados. Con 500,000 tiradas, se obtuvo un valor muy alto (608.86) cuando lo esperado era que fuera menor a 16.92.
+
+\subsection{Test de Rachas}
+
+\begin{table}[H]
+\begin{tabular}{|
+>{\columncolor[HTML]{FFFFFF}}l |
+>{\columncolor[HTML]{FFFFFF}}l |
+>{\columncolor[HTML]{FFFFFF}}l |
+>{\columncolor[HTML]{00FF00}}l |}
+\hline
+\multicolumn{1}{|c|}{\cellcolor[HTML]{C0C0C0}{\color[HTML]{000000} \textbf{Generador}}} & \cellcolor[HTML]{C0C0C0}{\color[HTML]{000000} \textbf{Numeros}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}{\color[HTML]{000000} \textbf{Test de Rachas}}} & \cellcolor[HTML]{C0C0C0}{\color[HTML]{000000} \textbf{Pasó Test?}} \\ \hline
+GCL RandU & 10000 & Valor Obtenido = -0.799 , Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+GCL RandU & 50000 & Valor Obtenido = -0.449 , Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+GCL RandU & 100000 & Valor Obtenido = -0.0625, Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+GCL RandU & 500000 & Valor Obtenido = 1.072 , Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+Cuadrados Medios & 10000 & Valor Obtenido = -0.134 , Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+Cuadrados Medios & 50000 & Valor Obtenido = -1.467 , Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+Cuadrados Medios & 100000 & Valor Obtenido = -1.917 , Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+Cuadrados Medios & 500000 & Valor Obtenido = -3.613 , Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+Random python & 10000 & Valor Obtenido = -1.225 , Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+Random python & 50000 & Valor Obtenido = -0.566 , Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+Random python & 100000 & Valor Obtenido = -0.107 , Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+Random python & 500000 & Valor Obtenido = -2.231 , Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection{Test Arriba y Abajo}
+
+\begin{table}[H]
+\begin{tabular}{|
+>{\columncolor[HTML]{FFFFFF}}l |
+>{\columncolor[HTML]{FFFFFF}}l |
+>{\columncolor[HTML]{FFFFFF}}l |
+>{\columncolor[HTML]{00FF00}}l |}
+\hline
+\multicolumn{1}{|c|}{\cellcolor[HTML]{C0C0C0}{\color[HTML]{000000} \textbf{Generador}}} & \cellcolor[HTML]{C0C0C0}{\color[HTML]{000000} \textbf{Numeros}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}{\color[HTML]{000000} \textbf{Test de Arriba y Abajo}}} & \cellcolor[HTML]{C0C0C0}{\color[HTML]{000000} \textbf{Pasó Test?}} \\ \hline
+GCL RandU & 10000 & Valor Obtenido = 0.306 , Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+GCL RandU & 50000 & Valor Obtenido = -0.837 , Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+GCL RandU & 100000 & Valor Obtenido = 0.118, Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+GCL RandU & 500000 & Valor Obtenido = 1.772 , Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+Cuadrados Medios & 10000 & Valor Obtenido = -0.4 , Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+Cuadrados Medios & 50000 & Valor Obtenido = -0.542 , Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+Cuadrados Medios & 100000 & Valor Obtenido = 0.033 , Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+Cuadrados Medios & 500000 & Valor Obtenido = 1.270 , Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+Random python & 10000 & Valor Obtenido = -0.748 , Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+Random python & 50000 & Valor Obtenido = -0.617, Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+Random python & 100000 & Valor Obtenido = 0.660 , Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+Random python & 500000 & Valor Obtenido = -0.096 , Valor esperado por Tabla \textless 1.96 & Verdadero \\ \hline
+\end{tabular}
+\end{table}
+
+Para simplificar, observamos que el Test de Rachas y el Test de Arriba y Abajo fueron aprobados por todos los métodos implementados. Esto no implica que los tests no sean importantes, sino que reafirma que, en general, estos generadores se comportan de la manera esperada.
+
+El método de los Cuadrados Medios es el único que falló en una de las pruebas. Esto se debe a que el Test de Chi-cuadrado verifica la independencia entre las variables. El método de los Cuadrados Medios muestra cierta relación entre los números, lo que nos permite afirmar que es menos eficiente que otros generadores.
+
+Además, podemos concluir que el generador de Cuadrados Medios es el menos eficaz debido a lo mencionado anteriormente. Aunque pasa la mayoría de los tests, hemos notado que el análisis visual de los resultados es crucial para detectar patrones de comportamiento.
+
+Podríamos decir que este generador no es eficaz para 100,000 tiradas al analizar la gráfica, pero en todos los tests realizados, el generador parece cumplir normalmente su función, lo que contrasta con la evaluación visual.
+
+\section{Conclusiones generales}
+
+Aunque los tres generadores producen números que ocupan todo el espectro de la gráfica, esto no garantiza que los números generados sean completamente aleatorios. Para los tests que realizamos, se confirmó la aleatoriedad. Sin embargo, no es imposible que, si se realizaran más pruebas con distintos tests, se obtuvieran resultados fallidos.
+
+El generador que demuestra mayor ineficiencia al generar números aleatorios es el basado en el método de los cuadrados medios, debido a la repetición constante de números y los bucles que genera, formando un patrón que se repite infinitamente. Sin embargo, en su época, su creación fue muy aceptada debido a la novedad del algoritmo, permitiendo el desarrollo de otros algoritmos en el futuro. Este generador logró pasar la mayoría de los tests de corridas debido a que estos contemplan la uniformidad de los números generados, y la repetición de una misma secuencia de números cada ciertas tiradas asegura que pasaría la prueba.
+
+A pesar de que los tres generadores que analizamos hayan pasado la gran mayoría de las pruebas, esto no indica que sean los mejores generadores para usos más prácticos. No obstante, podemos afirmar que estos generadores son adecuados para los objetivos de nuestro trabajo, que consisten en corroborar la aleatoriedad de los números generados.
+
+\bibliographystyle{unsrt}  
+
+\begin{thebibliography}{1}
+    \bibitem{theorem} \url{https://tereom.github.io/est-computacional-2018/numeros-pseudoaleatorios.html}
+    \bibitem{tests} \url{https://www.random.org/analysis/}
+    \bibitem{book} \url{https://www.random.org/analysis/Analysis2005.pdf}
+\end{thebibliography}
+\end{document}

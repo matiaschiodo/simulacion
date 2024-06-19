@@ -1,0 +1,540 @@
+\documentclass{article}
+
+\usepackage{arxiv}
+\usepackage[spanish, mexico]{babel}
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{lipsum}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{enumitem}
+
+\title{TP 1.2 - ESTUDIO ECONÓMICO-MATEMÁTICO DE APUESTAS EN LA RULETA}
+
+\author{
+  Rios Emiliano\\
+  Universidad Tecnológica Nacional\\
+  Rosario, Santa Fe  \\
+  \texttt{emilianorios99@gmail.com} \\
+  \And
+  Chiodo Matías\\
+  Universidad Tecnológica Nacional\\
+  Rosario, Santa Fe  \\
+  \texttt{matiaschiodo@gmail.com} \\
+  \And
+  Pereyra Camilo\\
+  Universidad Tecnológica Nacional\\
+  Rosario, Santa Fe\\
+  \texttt{caamilopereyra01@gmail.com} \\
+  \And
+  Guerrero Andrés\\
+  Univesidad Tecnológica Nacional\\
+  Rosario, Santa Fe \\
+  \texttt {andresguerreroutn@gmail.com} \\
+  \And
+  Giovanelli Julian\\
+  Universidad Tecnológica Nacional\\
+  Rosario, Santa Fe  \\
+  \texttt{julian\_giovanelli@hotmail.com} \\
+}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+Este documento tiene como propósito presentar y examinar los resultados del programa desarrollado para implementar diversas estrategias en la ruleta. Así, los resultados se complementarán con los obtenidos en el trabajo práctico 1.1, donde se estudiaron las variables de probabilidad y estadística de una ruleta ideal.
+\end{abstract}
+
+\section{Introducción}
+El propósito del estudio es modelar y probar un juego de ruleta ideal, con números distribuidos del 0 al 36 sin repeticiones. A diferencia del trabajo práctico 1.1, donde el enfoque estaba en las variables de probabilidad y estadística de la ruleta, aquí nos centraremos en observar cómo se comportan diferentes estrategias de apuestas.
+
+El programa no solo nos mostrará la variación de nuestro capital a lo largo de las tiradas, sino que también permitirá realizar múltiples iteraciones con la misma estrategia. Así, cada estrategia será examinada mediante un experimento individual y luego con 100 repeticiones. Esto nos ayudará a encontrar patrones que revelen las probabilidades de obtener ganancias reales en la ruleta. Las estrategias de ruleta que hemos decidido analizar son:
+
+\begin{itemize}
+
+\item Martingala
+\item D'Alembert
+\item Secuencia de Fibonacci
+\item Constante
+
+\end{itemize}
+
+\section{Marco Teórico}
+Al hablar de aleatoriedad, surgen preguntas fundamentales: ¿qué es?, ¿qué significa que algo sea aleatorio?, y si verdaderamente puede existir algo aleatorio. Estas preguntas son de gran relevancia práctica, ya que la aleatoriedad resulta sorprendentemente útil en muchos campos de estudio, incluida la teoría de juegos y la simulación de eventos, variables y sistemas.
+
+Los números aleatorios no siguen ninguna ley predecible. El resultado de cualquier evento aleatorio no puede anticiparse antes de que ocurra. Una secuencia aleatoria de eventos, símbolos o pasos a menudo no tiene un orden discernible ni sigue un patrón claro. Sin embargo, aunque los eventos individuales son impredecibles, la frecuencia de los diferentes resultados en múltiples eventos o ensayos tiende a ser predecible, ya que generalmente siguen una distribución de probabilidad.
+
+Este principio es clave en la teoría de juegos y se aplica al estudio de las estrategias de apuestas en la ruleta. Aunque las apuestas individuales son impredecibles, la probabilidad de ciertos resultados se puede modelar con la esperanza de identificar patrones o tendencias a largo plazo. Esto ha dado lugar a numerosas estrategias de apuestas que buscan optimizar las posibilidades de ganar, como la estrategia Martingala, D'Alembert, entre otras. Cada una de estas estrategias asume un enfoque distinto hacia el riesgo y la aleatoriedad, revelando un conjunto de principios de teoría de juegos que permiten comprender mejor la naturaleza y la eficacia de las apuestas en la ruleta.
+
+\subsection{Estrategia Martingala}
+La estrategia Martingala es una de las más conocidas en el mundo de las apuestas. Los principiantes suelen usarla como un primer paso en su proceso de aprendizaje, mientras que los jugadores más experimentados tienden a evitarla, enfocándose en tácticas más complejas.
+
+En la estrategia Martingala, se sigue una secuencia de apuestas crecientes al perder. Si pierdes una ronda, debes apostar el doble de lo que perdiste en la siguiente ronda. Se continúa así hasta que finalmente se gana, recuperando todo lo perdido y obteniendo un beneficio equivalente a la apuesta inicial. Después de ganar, la estrategia se reinicia con la cantidad inicial.
+
+Por ejemplo, si apuestas \$10 al rojo y pierdes, en la siguiente ronda apuestas \$20 en una jugada sencilla (rojo-negro, par-impar, etc.). Si vuelves a perder, subes la apuesta a \$40 y sigues doblando hasta que la suerte te acompañe.
+
+Aunque la lógica detrás de la secuencia Martingala puede parecer irrefutable, en la práctica es una estrategia arriesgada. Una racha de mala suerte puede agotar rápidamente los fondos del jugador. Además, muchos casinos imponen un límite máximo de apuesta, lo que impide aplicar esta estrategia de manera efectiva, incluso si el jugador tiene suficiente capital.
+
+La estrategia Martingala es más comúnmente aplicada a las apuestas que tienen aproximadamente una probabilidad de ganar del 50\%. En el contexto de la ruleta, estas incluyen:
+\begin{itemize}
+\item Rojo/Negro: Apostar a que la bola caerá en un número rojo o negro.
+\item Par/Impar: Apostar a que el número será par o impar.
+\item Alto/Bajo: Apostar a que el número será bajo (1-18) o alto (19-36).
+\end{itemize}
+
+\subsection{Estrategia D'Alembert}
+Este método para ganar en la ruleta se basa en la Ley de Equilibrio, desarrollada por el matemático francés D'Alembert en el siglo XVIII. Consiste en añadir una unidad de apuesta después de cada pérdida y restarla en caso de acierto. Este sistema también es conocido como el "Sistema de la Pirámide" y es una de las estrategias más utilizadas en la ruleta europea. Está diseñado para los jugadores que desean mantener un número fijo de apuestas y minimizar sus pérdidas.
+
+El sistema D'Alembert está pensado para que, en caso de un número igual de jugadas ganadoras y perdedoras, el resultado final sea positivo, reflejando el número de apuestas ganadoras. Es especialmente popular para las apuestas de dinero casi igual, como rojo/negro, par/impar, y alto/bajo en la ruleta.
+
+Por ejemplo, si apuestas \$20 al negro y pierdes, en la siguiente ronda deberías apostar \$21. Si vuelves a perder, apostarás \$22. Si pierdes otra vez, apostarás \$23.
+
+Sin embargo, si ganas en la siguiente ronda, deberías reducir la apuesta a \$22. Si vuelves a ganar, apostarás \$21. Si ganas esa ronda también, habrás equilibrado el ciclo de pérdidas y ganancias: $-20-21-22+23+22+21=3$ . 
+
+\subsection{Estrategia de Fibonacci}
+La célebre secuencia matemática de Fibonacci ha sido adaptada a la ruleta, demostrando ser un sistema relativamente seguro para controlar las pérdidas.
+
+La secuencia comienza así:
+$1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610...$
+
+Cada número es la suma de los dos anteriores, y la secuencia no tiene fin.
+
+Para aplicar esta estrategia, se sigue la secuencia empezando por cualquiera de sus números (usualmente se comienza con \$1) y se incrementa o disminuye según se pierda o gane. Aquí tienes un ejemplo:
+
+Supón que apuestas una ficha de \$1 y pierdes. En la siguiente ronda, vuelves a apostar \$1. Si ganas, compensas la pérdida. Si pierdes esa segunda apuesta, avanzas en la secuencia y apuestas \$2 en la próxima ronda. Si vuelves a perder, apuestas \$3, y si sigues perdiendo, apuestas \$5. Se continúa así hasta que finalmente ganes.
+
+Después de cada ronda ganadora, la siguiente apuesta debe retroceder dos posiciones en la secuencia. Por ejemplo, si tu última apuesta fue de \$5, la siguiente debe ser de \$2. Así, se retrocede en la secuencia hasta volver al principio o hasta que se reanuden las pérdidas.
+
+La estrategia de Fibonacci se utiliza principalmente en las mismas apuestas de probabilidad casi igual que la Martingala, es decir, rojo/negro, par/impar, y alto/bajo. Esta produce ganancias pequeñas, pero puede ayudar a compensar las pérdidas, aunque no siempre, ya que la ruleta sigue siendo un juego de azar.
+
+\subsection{Estrategia Constante}
+La estrategia de juego constante para la ruleta es un enfoque en el que el jugador apuesta la misma cantidad en cada ronda, sin importar si gana o pierde. En lugar de aumentar o disminuir la apuesta según el resultado anterior, como ocurre en otras estrategias como la Martingala o la Martingala inversa, el jugador mantiene un monto fijo para cada jugada.
+
+Por ejemplo, un jugador que decide apostar \$10 al rojo en cada ronda continuará haciendo exactamente la misma apuesta, sin importar si gana o pierde en cada ronda sucesiva.
+
+Esta estrategia tiene algunas características importantes:
+
+\begin{enumerate}
+\item \textbf{Gestión del riesgo}: Dado que el monto de la apuesta no cambia, se reduce el riesgo de sufrir grandes pérdidas rápidamente en comparación con estrategias donde las apuestas aumentan.
+\item \textbf{Previsibilidad}: La constancia en la cantidad apostada permite planificar y administrar mejor el capital, estableciendo límites de pérdidas más claros.
+\item \textbf{Limitaciones}: Aunque esta estrategia es más conservadora, no garantiza el éxito a largo plazo, ya que las probabilidades del casino están diseñadas para que la casa tenga una ventaja estadística en el juego.
+\end{enumerate}
+
+En resumen, la estrategia de juego constante es simple, adecuada para aquellos que prefieren un enfoque menos agresivo y que quieran disfrutar del juego sin asumir riesgos elevados.
+
+\section{Metodología de trabajo}
+Este estudio se enfoca en la evolución de los fondos utilizados durante las tiradas de ruleta en contextos de apuestas, empleando un enfoque cuantitativo para el análisis de los datos. La principal fuente de datos proviene de simulaciones realizadas mediante un programa en Python diseñado para replicar las condiciones de una partida de ruleta. Este programa permite especificar diversas estrategias de apuestas y configurar el capital inicial de los jugadores. Además, se incluye la opción de simular escenarios donde el capital es considerado infinito, lo cual permite evaluar estrategias de apuestas sin el límite de fondos exhaustos.
+
+\subsection{Recopilación de Datos}
+Los datos fueron generados mediante múltiples corridas de simulación utilizando el programa mencionado. Para cada simulación, se especificó una estrategia de apuesta y se registraron los resultados de las tiradas, incluyendo cambios en los fondos a lo largo del tiempo. Las simulaciones se repitieron suficientes veces para garantizar la robustez estadística de los resultados.
+
+
+\subsection{Procedimientos Analíticos}
+El análisis de los datos se centró en métodos estadísticos, con particular énfasis en la frecuencia relativa de los resultados. Esto implicó calcular la proporción de veces que un determinado evento (por ejemplo, alcanzar un nivel de fondos específico) ocurrió respecto al total de tiradas realizadas. Este método permitió una evaluación detallada de cómo las diferentes estrategias de apuestas afectan la evolución del capital en el juego de la ruleta.
+
+
+\section{Caso de Estudio: Capital Finito}
+\subsection{Estrategía Martingala}
+\subsubsection{Corrida Simple}
+
+\begin{itemize}
+\item Capital Inicial:\$ 500
+\item Apuesta Inicial:\$ 10
+\item Corridas: 1
+\item Tiradas: 100
+\item Tipo de apuesta: Color (Rojo-Negro)
+\end{itemize}
+
+    \begin{figure} [h]
+        \centering
+            \includegraphics[scale=0.5]{Martingala/fc_martingala_limitado.png}
+            \caption{Valor del capital en la tirada n con un capital inicial de \$500.}
+            \label{fig:grafico}
+    \end{figure}
+
+Para este estudio de caso, se llevó a cabo un único experimento de 100 tiradas. Como se puede observar en el gráfico de la Figura 1, los resultados del experimento fueron inesperadamente favorables. Tras 100 tiradas, el capital aumentó en un 50\%. Se puede notar que el capital evolucionó de manera lineal con caídas abruptas.
+
+Con esta estrategia, es evidente cómo se presentan caídas bruscas, pero estas son rápidamente recuperadas. Esto se debe a las características de la estrategia, que duplica la inversión cada vez que se pierde. Esto ocasiona pérdidas más rápidas, pero también una recuperación acelerada. Precisamente, son cuatro pérdidas consecutivas las que provocan la caída, pero ese es el límite del experimento.
+
+Inicialmente, podemos concluir que en este experimento se tuvo suerte y los resultados fueron muy buenos. A simple vista, se puede suponer que la media de los resultados no es siempre así. Esto lo analizaremos más adelante con múltiples tiradas.
+
+De todas maneras, no se puede afirmar que siempre será así, porque debido a la característica de la estrategia martingala de duplicar la apuesta cada vez que se pierde, se podría alcanzar la bancarrota muy rápidamente luego de una mala racha.
+   
+\clearpage
+\begin{figure} [h]
+    \centering
+    \includegraphics[scale=0.5]{Martingala/fr_martingala_limitado.png}
+    \caption{Valor de la frecuencia relativa en la tirada n con un capital inicial de \$500.}
+    \label{fig:grafico}
+\end{figure}
+
+En la figura 2 se muestra la frecuencia relativa de que la apuesta sea exitosa a lo largo de las tiradas. Por ejemplo, las dos primeras apuestas fueron ganadoras, lo que resultó en una frecuencia de 1.0. Sin embargo, a medida que aparecieron apuestas perdedoras, la frecuencia comenzó a estabilizarse alrededor de 0.5, aunque terminó un poco por debajo al final. Esta frecuencia tiene sentido, ya que al apostar a una apuesta de tipo ``Color (Rojo-Negro)'', las probabilidades de ganar son del 0.4865, lo que corresponde a 18/37.
+
+\subsubsection{Corrida Múltiple}
+
+\begin{itemize}
+\item Capital Inicial:\$ 500
+\item Apuesta Inicial:\$ 10
+\item Corridas: 50
+\item Tiradas: 100
+\item Tipo de apuesta: Color (Rojo-Negro)
+\end{itemize}
+
+\begin{figure} [H]
+        \centering
+
+         \includegraphics[scale=0.6]{Martingala/fc_martingala_limitado_multiple.png}
+            \caption{Valor del capital en la tirada n de multiples corridas.}
+            \label{fig:grafico}
+             
+    \end{figure}
+    
+Al analizar los múltiples experimentos, se observa que una gran parte de ellos no logra sobrevivir el número máximo de iteraciones. En estos casos, la estrategia se vuelve inviable debido a la necesidad de apostar más dinero del disponible. Con menor frecuencia, se observa que algunos experimentos fracasan de manera similar, aunque con menor intensidad a medida que aumentan las iteraciones.
+
+Inicialmente, se puede concluir que, aunque la estrategia fue viable en un solo experimento, permitiendo un aumento del capital inicial, al realizar un mayor número de experimentos se evidencia que en muy pocos casos se logra una ganancia. Además, a medida que se incrementa el número de iteraciones, aumenta la probabilidad de perder todo el capital disponible.
+
+\subsection{Estrategia D’Alembert}
+\subsubsection{Corrida Simple}
+
+\begin{itemize}[noitemsep]
+\item Capital Inicial: \$1000
+\item Apuesta Inicial: \$10
+\item Corridas: 1
+\item Tiradas: 100
+\item Tipo de apuesta: Color (Rojo-Negro)
+\end{itemize}
+
+ \begin{figure} [H]
+        \centering
+            \includegraphics[scale=0.5]{D'alembert/Limitado/DAL - Capital por tirada LIMITADO.png}
+            \caption{Valor del capital en la tirada n con un capital inicial de \$1000.}
+            \label{fig:grafico}
+    \end{figure}
+
+En la figura 4 se muestra la evolución del capital con los parámetros mencionados utilizando la estrategia ``D'alembert''. Con esta estrategia, encontramos resultados ligeramente favorables, mostrando un crecimiento menos lineal en comparación con la estrategia ``Martingala''.
+
+También podemos observar que las caídas de capital son menos pronunciadas, tal como se esperaba. Nuevamente, esperaremos a ver los resultados de múltiples experimentos para poder sacar conclusiones definitivas con respecto a esta estrategia.
+
+ \begin{figure} [H]
+        \centering
+            \includegraphics[scale=0.5]{D'alembert/Limitado/DAL - frec. de ganar por tirada LIMITADO .png}
+            \caption{Valor de la frecuencia relativa en la tirada n con un capital inicial de \$1000.}
+            \label{fig:grafico}
+    \end{figure}
+    
+En la figura 5 podemos ver como la frecuencia relativa de que la apuesta sea exitosa se aproxima a 0.5 a medida que incrementa el numero de tiradas. Esta frecuencia tiene sentido, ya que al utilizar a una apuesta del tipo ``Color (Rojo-Negro)'', las probabilidades de ganar son del 0.4865, lo que corresponde a 18/37.
+
+\clearpage
+
+\subsubsection{Corridas Múltiples}
+\begin{itemize}[noitemsep]
+\item Capital Inicial: \$1000
+\item Apuesta Inicial: \$10
+\item Corridas: 50
+\item Tiradas: 100
+\item Tipo de apuesta: Color (Rojo-Negro)
+\end{itemize}
+ \begin{figure} [h]
+        \centering
+            \includegraphics[scale=0.5]{D'alembert/Limitado/DAL - evolucion de capital de multiples corridas LIMITADO.png}
+            \caption{Valor del capital en la tirada n de multiples corridas.}
+            \label{fig:grafico}
+    \end{figure}
+    
+En esta estrategia, se observa que, con un capital reducido, son muy pocos los experimentos en los que se obtiene una ganancia significativa. En comparación con la estrategia anterior, los experimentos en los que se alcanza la bancarrota sin oportunidad de seguir apostando según la estrategia están más distribuidos a lo largo de todas las iteraciones, en lugar de concentrarse esencialmente al inicio de estas.
+
+\subsection{Estrategia Fibonacci}
+\subsubsection{Corrida Simple}
+
+\begin{itemize}[noitemsep]
+\item Capital Inicial: \$1000
+\item Apuesta Inicial: \$10
+\item Corridas: 1
+\item Tiradas: 100
+\item Tipo de apuesta: Color (Rojo-Negro)
+\end{itemize}
+
+ \begin{figure} [H]
+        \centering
+             \includegraphics[scale=0.5]{Fibonacci/Limitado/Fibo Ev Capital - Limitado .png}
+            \caption{Valor del capital en la tirada n con un capital inicial de \$1000.}
+            \label{fig:grafico}
+    \end{figure}
+
+En esta figura 7 observamos algo diferente a las estrategias previamente utilizadas. Las ganancias y pérdidas son menos pronunciadas que con el resto. En esta simulación, el apostador termina con ganancias del 40\% de su capital inicial.
+
+También podemos observar que las caídas de capital son menos pronunciadas, como era esperado, por ser una estrategia menos agresiva. Otra vez, esperaremos a ver los resultados aplicando múltiples experimentos para poder sacar las conclusiones con respecto a esta estrategia.
+
+    \begin{figure} [h]
+        \centering
+            \includegraphics[scale=0.5]{Fibonacci/Limitado/Frec de ganar Fibo Limitado.png}
+            \caption{Valor de la frecuencia relativa en la tirada n con un capital inicial de \$1000.}
+            \label{fig:grafico}
+    \end{figure}
+
+\subsubsection{Corridas Múltiples}
+\begin{itemize}
+\item Capital Inicial: \$1000
+\item Apuesta Inicial: \$10
+\item Corridas: 50
+\item Tiradas: 100
+\item Tipo de apuesta: Color (Rojo-Negro)
+\end{itemize}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{Fibonacci/Ilimitado/Ev de Capital Multiple Fibo Ilimitado.png}
+    \caption{Valor del capital de 50 experimentos en la tirada n con un capital infinito.}
+    \label{fig:enter-label}
+\end{figure}
+
+
+\subsection{Estrategía Constante}
+\subsubsection{Corrida Simple}
+
+\begin{itemize}
+\item Capital Inicial:\$ 1000
+\item Apuesta Inicial:\$ 10
+\item Corridas: 1
+\item Tiradas: 100
+\item Tipo de apuesta: Color (Rojo-Negro)
+\end{itemize}
+
+    \begin{figure} [h]
+        \centering
+         \includegraphics[scale=0.5]{Constante/Limitado/capital_por_tirada.png}
+            \caption{Valor del capital en la tirada n con un capital inicial de \$1000.}
+            \label{fig:grafico}
+    \end{figure}
+
+Para este estudio de caso, se llevó a cabo un único experimento de 100 tiradas. Como se puede observar en el gráfico de la Figura, el capital se mantiene medianamente constante a lo largo de las tiradas, se puede observar una especie de patrón donde al comienzo se pierde mucho capital pero luego se recupera y se obtiene una ganancia para luego perderla nuevamente y se concluye con un capital idéntico al incial, esto es debido a que se apuesta siempre el mismo monto.
+
+    \begin{figure} [h]
+        \centering
+         \includegraphics[scale=0.5]{Constante/Limitado/frecuencia_ganar.png}
+            \caption{Valor de la frecuencia relativa en la tirada n con un capital inicial de \$1000.}
+            \label{fig:grafico}
+    \end{figure}
+
+La figura muestra la frecuencia relativa de que la apuesta sea exitosa a lo largo de las tiradas. Por ejemplo, la primera apuesta fue ganadora, lo que resultó en una frecuencia de 1.0. Sin embargo, a medida que aparecieron apuestas perdedoras, la frecuencia comenzó a estabilizarse alrededor de 0.5.
+
+\subsubsection{Corrida Múltiple}
+
+\begin{itemize}[noitemsep]
+\item Capital Inicial:\$ 1000
+\item Apuesta Inicial:\$ 10
+\item Corridas: 50
+\item Tiradas: 100
+\item Tipo de apuesta: Color (Rojo-Negro)
+\end{itemize}
+
+    \begin{figure} [H]
+        \centering
+         \includegraphics[scale=0.6]{Constante/Limitado/capital_multiples_corridas.png}
+            \caption{Valor del capital en la tirada n con múltiples corridas.}
+            \label{fig:grafico}
+    \end{figure}
+
+Al analizar los múltiples experimentos se puede observar que aproximadamente la mitad termina las 100 tiradas con un capital menor al inicial y la otra mitad con un capital superior al inicial. Se ve una semenejanza con una campana de Gauss por lo que inferiría en que la estrategia tiene una distribución normal donde la mayor concentración de las corridas finalizó con un capital cercano al inicial y menos frecuentemente hubo corridas con un capital mucho menor al inicial o mucho mayor.
+
+\section{Caso de Estudio 2: Capital Infinito}
+
+Para este caso de estudio realizaremos un total de 50 experimentos de 1000 tiradas cada uno. Representaremos cada uno de los experimentos con un color distintivo, aunque al representar 50 colores distintos estos pueden tomar tonalidades muy parecidas y confundirse.
+
+\subsection{Estrategía Martingala con capital Infinito}
+\begin{itemize}[noitemsep]
+\item Capital Inicial: \$1000
+\item Apuesta Inicial: \$10
+\item Corridas: 50
+\item Tiradas: 1000
+\item Tipo de apuesta: Color (Rojo-Negro)
+\end{itemize}
+
+\clearpage
+
+\begin{figure}[H] % [H] to force placement here
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{Martingala/ilimitado/frecuencia_de_ganar_por_tirada.png}
+        \caption{Caption for image 1}
+        \label{fig:image1}
+    \end{subfigure}
+\end{figure}
+
+\begin{figure}
+    
+\end{figure}
+ \begin{figure}
+     \centering
+     \includegraphics[width=0.75\linewidth]{Martingala/ilimitado/evolucion_de_capital_multiples_tiradas.png}
+     \caption{Evolución de capital para la tirada n - multiples corridas}
+     \label{fig:enter-label}
+ \end{figure}
+\clearpage
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\linewidth]{Martingala/ilimitado/frecuencia_de_ganar_por_tirada.png}
+    \caption{Enter Caption}
+    \label{fig:enter-label}
+\end{figure}
+ \begin{figure}
+     \centering
+     \includegraphics[width=0.75\linewidth]{Martingala/ilimitado/porcentaje_de_corridas_con_ganancias.png}
+     \caption{Enter Caption}
+     \label{fig:enter-label}
+ \end{figure}
+\clearpage
+En este caso representaremos los diferentes experimentos con capital infinito, utilizaremos un capital inicial para tener una medida de la cual partir, por lo tanto al utilizar valores de capital negativo estaremos utilizando capital que la persona cuente disponible.
+
+Como podemos notar en estos experimentos al seguir la estrategia podemos tener que invertir una cantidad exagerada de dinero en un par de pocas iteraciones.
+
+Con lo todo lo visto de esta estrategia podemos decir que si bien es posible generar ganancias es extremadamente arriesgada , ya que podemos perder todo nuestro capital en tan solo un par de tiradas. Aunque si contamos con un gran capital o cercano a infinito con respecto a nuestra apuesta inicial podemos concluir que siempre vamos a ganar ya
+que siempre podemos doblar nuestra apuesta y duplicar nuestra apuesta inicial. Por lo tanto podríamos elegir un monto objetivo y apostar hasta lograr este margen de ganancia.
+
+ \clearpage
+\subsection{Estrategia D’Alembert}
+
+\begin{itemize}
+\item Capital Inicial: 1000
+\item Apuesta Inicial: \$10
+\item Tiradas: 100
+\item Repeticiones del experimento: 50
+\end{itemize}
+
+
+En esta estrategia podemos notar que contando con un capital reducido son muy pocos los experimentos en los que se obtiene una ganancia significativa, en comparación a la estrategia anterior los experimentos donde quedamos en bancarrota sin oportunidad de seguir apostando acorde a la estrategia están mas distribuidos a lo largo de todas las
+iteraciones sin concentrarse esencialmente en el inicio de estas.
+
+\subsubsection{Estrategia D’Alembert con capital Infinito}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\linewidth]{D'alembert/Ilimitado/DAL - Ev de Capital por tirada ILIMITADO.png}
+    \caption{Valor del capital en la tirada n con un capital inicial de $1000$}
+    \label{fig:enter-label}
+\end{figure}
+\begin{figure}
+        \centering
+        \includegraphics[width=0.75\linewidth]{D'alembert/Ilimitado/DAL - Ev. de Capital de multiples corridas ILIMITADO.png}
+        \caption{Valor del capital en la tirada n con multiples corridas}
+        \label{fig:enter-label}
+    \end{figure}    
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\linewidth]{D'alembert/Ilimitado/DAL - Frec deganar por tirada ILIMITADO.png}
+    \caption{Valor de la frecuencia relativa en la tirada n con un capital inicial de \$1000}
+    \label{fig:enter-label}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\linewidth]{D'alembert/Ilimitado/DAL - Ptaje de Corridas con ganancias acum ILIMITADO.png}
+    \caption{Porcentaje de corridas que finalizaron con ganancias}
+    \label{fig:enter-label}
+\end{figure}
+En este caso que contamos con capital infinito nos damos cuenta que en contradicción a la estrategia anterior nos damos cuenta que no siempre ganamos contando con capital infinito y las estrategias que pierden comparadas a las que ganan dinero a lo largo de las 50 iteraciones son muchas mas que en las estrategias anteriores. Por lo tanto con estos resultados podemos concluir que esta estrategia no es sustancialmente viable con capital finito o infinito. Es pura suerte el hecho de ganar, aunque debes tener presente que es mas probable perder dinero.
+
+\subsection{Estrategia Fibonacci}
+
+\begin{itemize}[noitemsep]
+\item Capital Inicial: \$1000
+\item Apuesta Inicial:\$10
+\item Corridas: 1
+\item Tiradas: 1000
+\item Tipo de apuesta: Color (Rojo-Negro)
+\end{itemize}
+
+    \begin{figure} [H]
+        \centering
+            \includegraphics[scale=0.5]{Fibonacci/Ilimitado/Ev Capital Fibo Ilimitado.png}
+            \caption{Valor del capital de 100 experimentos en la tirada n con un capital inicial de \$10000.}
+            \label{fig:grafico}
+    \end{figure}  
+    
+    \begin{figure}[H]
+        \centering
+            \includegraphics[scale=0.5]{Fibonacci/Ilimitado/Frec de ganar Fibo Ilimitado.png}
+            \caption{Valor de la frecuencia relativa de 50 experimentos en la tirada n con un capital inicial de \$10000.}
+            \label{fig:grafico}
+    \end{figure}
+
+Estos gráficos revelan una subida casi exponencial del capital a medida que se realizan las tiradas de la ruleta. Esta tendencia ascendente sugiere que, con capital ilimitado, el jugador experimenta un crecimiento constante en su capital a lo largo del tiempo, ya que no se ve limitado por la pérdida de fondos para seguir apostando. 
+
+\subsubsection{Estrategia Fibonacci con capital Infinito}
+        
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{Fibonacci/Ilimitado/Ev de Capital Multiple Fibo Ilimitado.png}
+    \caption{Valor del capital de 50 experimentos en la tirada n con un capital infinito.}
+    \label{fig:enter-label}
+\end{figure}
+Como podemos notar aun teniendo capital infinito para realizar apuestas , nuestra ganancia no sera significativa al compararlo con las perdidas obtenidas en los experimentos que peor resultado tuvieron luego de las 100 iteraciones. Notamos que la ganancia en esta estrategia sera mucho menor a las anteriores con respecto a la perdida y ganancia es la que peor relación presenta a la hora de seguir alguna estrategia premeditada.
+
+\subsection{Estrategía Constante}
+\subsubsection{Corrida Simple}
+
+\begin{itemize}
+\item Capital Inicial:\$ 1000
+\item Apuesta Inicial:\$ 10
+\item Corridas: 1
+\item Tiradas: 100
+\item Tipo de apuesta: Color (Rojo-Negro)
+\end{itemize}
+
+    \begin{figure} [H]
+        \centering
+         \includegraphics[scale=0.5]{Constante/Ilimitado/capital_por_tirada.png}
+            \caption{Valor del capital en la tirada n con un capital inicial de \$1000.}
+            \label{fig:grafico}
+    \end{figure}
+
+Como se puede observar en el gráfico de la Figura, se perdió mucho capital durante las primeras tiradas, luego se logró estabilizar, manteniendo una especie de patrón donde el capital se mantuvo entre 980 y 930 aproximadamente.
+
+    \begin{figure} [H]
+        \centering
+         \includegraphics[scale=0.5]{Constante/Ilimitado/frecuencia_ganar.png}
+            \caption{Valor de la frecuencia relativa en la tirada n con un capital inicial de \$1000.}
+            \label{fig:grafico}
+    \end{figure}
+
+En la figura se puede observar como en las primeras 4 tiradas se obtuvo 4 pérdidas consecutivas con lo cual la frecuencia en ese punto es de 0, luego a medida que se fueron realizando más tiradas la frecuencia se fue acercando al 0.5 para concluir levemente por encima.
+
+\subsubsection{Corrida Múltiple}
+
+\begin{itemize} [noitemsep]
+\item Capital Inicial:\$ 1000
+\item Apuesta Inicial:\$ 10
+\item Corridas: 50
+\item Tiradas: 100
+\item Tipo de apuesta: Color (Rojo-Negro)
+\end{itemize}
+
+    \begin{figure} [H]
+        \centering
+         \includegraphics[scale=0.6]{Constante/Ilimitado/capital_multiples_corridas.png}
+            \caption{Valor del capital en la tirada n con múltiples corridas.}
+            \label{fig:grafico}
+    \end{figure}
+
+Al igual que con el capital limitado en la figura se puede observar una distribución aparentemente normal donde la mayor concentración donde el capital es el inicial.
+
+\section{Conclusiones}
+
+Claramente, la investigación reflejada en el segundo caso de estudio demuestra que al aumentar el número de experimentos se logran resultados más consistentes y relevantes para el análisis. Se observa que, a diferencia de un único experimento, donde los resultados indican una alta variabilidad y podrían llevarnos a conclusiones erróneas, como asumir la efectividad universal de todas las estrategias o creer equivocadamente que la estrategia Martingala puede cuadruplicar el capital inicial en solo 100 iteraciones, los datos de 100 experimentos presentan una realidad más matizada.
+
+Al examinar estos datos, se revela una gama mucho más amplia de posibles resultados, lo que evidencia la inexactitud de las primeras conclusiones. Desde el inicio del modelo, se estableció que la ruleta es un juego de azar, implicando que el éxito de cualquier estrategia está, en última instancia, sujeto a la aleatoriedad inherente del juego. A lo largo de nuestra investigación, se hizo evidente que no existe una estrategia infalible. Aunque inicialmente todas las estrategias mostraron resultados positivos, un análisis más exhaustivo a través de múltiples iteraciones revela que no siguen un patrón predecible que se pueda explotar consistentemente. De hecho, todas las estrategias enfrentan el riesgo de llevar a la bancarrota tras un número suficiente de juegos.
+
+\bibliographystyle{unsrt}  
+
+\begin{thebibliography}{1}
+    \bibitem{playuzu} \url{https://www.playuzu.com/blog/ruleta/las-5-mejores-estrategias-avanzadas-para-ganar-la-ruleta/}
+    \bibitem{python-ipatient} \url{https://python-para-impacientes.blogspot.com/2014/08/graficos-en-ipython.html}
+    \bibitem{relopezbriega} \url{https://relopezbriega.github.io/blog/2015/06/27/probabilidad-y-estadistica-con-python/}
+    \bibitem{sportium} \url{https://blog.sportium.es/3-simples-estrategias-para-ganar-en-la-ruleta-que-cualquiera-puede-intentar/}
+\end{thebibliography}
+\end{document}
